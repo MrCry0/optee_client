@@ -12,9 +12,9 @@ export VPREFIX
 
 EXPORT_DIR ?= $(O)/export
 DESTDIR ?= $(EXPORT_DIR)
-BINDIR ?= /bin
-LIBDIR ?= /lib
-INCLUDEDIR ?= /include
+SBINDIR ?= /usr/sbin
+LIBDIR ?= /usr/lib
+INCLUDEDIR ?= /usr/include
 
 CFG_TA_GPROF_SUPPORT ?= n
 
@@ -132,10 +132,10 @@ checkpatch-all-files: checkpatch-pre-req
 distclean: clean
 
 copy_export: build
-	mkdir -p $(DESTDIR)$(BINDIR) $(DESTDIR)$(LIBDIR) $(DESTDIR)$(INCLUDEDIR)
+	mkdir -p $(DESTDIR)$(SBINDIR) $(DESTDIR)$(LIBDIR) $(DESTDIR)$(INCLUDEDIR)
 	cp -a ${O}/libteec/libteec.so* $(DESTDIR)$(LIBDIR)
 	cp -a ${O}/libteec/libteec.a $(DESTDIR)$(LIBDIR)
-	cp ${O}/tee-supplicant/tee-supplicant $(DESTDIR)$(BINDIR)
+	cp ${O}/tee-supplicant/tee-supplicant $(DESTDIR)$(SBINDIR)
 	cp public/*.h $(DESTDIR)$(INCLUDEDIR)
 	cp libsks/include/*.h $(DESTDIR)$(INCLUDEDIR)
 	cp -a ${O}/libsks/libsks.so* $(DESTDIR)$(LIBDIR)
