@@ -58,6 +58,10 @@ CFG_SKS_CMD_AS_PARAM ?= 0
 # TEEC command id used as generic SKS CMD identifier
 CFG_SKS_CMD_IDENTIFIER ?= 0
 
+# CFG_SKS_TA_UUID
+# Default SKS TA UUID
+CFG_SKS_TA_UUID ?= "fd02c9da-306c-48c7-a49c-bbd827ae86ee"
+
 # Default output directory.
 # May be absolute, or relative to the optee_client source directory.
 O               ?= out

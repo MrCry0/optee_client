@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <linux/tee.h>
+
 #include "ck_helpers.h"
 #include "invoke_ta.h"
 #include "local_utils.h"
@@ -25,9 +27,46 @@ struct sks_primary_context {
 static struct sks_primary_context primary_ctx;
 static struct sks_invoke primary_invoke;
 
+static int uuid_from_string(TEEC_UUID *d, const char *s)
+{
+	const char *node;
+	char buf[3];
+	int i = 0;
+
+	/* UUID = 00000000-0000-0000-0000-000000000000 */
+	if (strlen(s) != 36)
+		return -1;
+	if (s[8] != '-' || s[13] != '-' ||
+			s[18] != '-' || s[23] != '-') {
+		LOG_ERROR("Invalid UUID format\n");
+		return -1;
+	}
+
+	memset(d, 0, sizeof(TEEC_UUID));
+
+	d->timeLow = strtoul(s, NULL, 16);
+	d->timeMid = strtoul(s + 9, NULL, 16);
+	d->timeHiAndVersion = strtoul(s + 14, NULL, 16);
+
+	buf[2] = '\0';
+	memcpy(&buf, s + 19, sizeof(uint16_t));
+	d->clockSeqAndNode[0] = strtoul(buf, NULL, 16);
+	memcpy(&buf, s + 21, sizeof(uint16_t));
+	d->clockSeqAndNode[1] = strtoul(buf, NULL, 16);
+
+	node = s + 24;
+	for (i = 2; i < 8; i++) {
+		buf[0] = *node++;
+		buf[1] = *node++;
+		d->clockSeqAndNode[i] = strtoul(buf, NULL, 16);
+	}
+
+	return 0;
+}
+
 static int open_primary_context(void)
 {
-	TEEC_UUID uuid = TA_SKS_UUID;
+	TEEC_UUID uuid;
 	uint32_t origin;
 	TEEC_Result res;
 
@@ -38,6 +77,11 @@ static int open_primary_context(void)
 	res = TEEC_InitializeContext(NULL, &primary_ctx.context);
 	if (res != TEEC_SUCCESS) {
 		LOG_ERROR("TEEC init context failed\n");
+		return -1;
+	}
+
+	if (uuid_from_string(&uuid, (const char*)TA_SKS_UUID)) {
+		LOG_ERROR("Failed to parse TA UUID\n");
 		return -1;
 	}
 
