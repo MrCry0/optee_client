@@ -50,6 +50,14 @@ CFG_TA_TEST_PATH ?= y
 # Enable Global Platform Sockets support
 CFG_GP_SOCKETS ?= y
 
+# CFG_SKS_CMD_AS_PARAM
+# Provide SKS command identifier as TEEC parameter
+CFG_SKS_CMD_AS_PARAM ?= 0
+
+# CFG_SKS_CMD_IDENTIFIER
+# TEEC command id used as generic SKS CMD identifier
+CFG_SKS_CMD_IDENTIFIER ?= 0
+
 # Default output directory.
 # May be absolute, or relative to the optee_client source directory.
 O               ?= out

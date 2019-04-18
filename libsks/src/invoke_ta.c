@@ -226,6 +226,11 @@ static CK_RV invoke_ta(struct sks_invoke *sks_ctx, unsigned long cmd,
 		op.paramTypes |= TEEC_PARAM_TYPES(0, 0, TEEC_MEMREF_WHOLE, 0);
 	}
 
+#if defined(CFG_SKS_CMD_AS_PARAM)
+	op.params[3].value.a = command;
+	op.paramTypes |= TEEC_PARAM_TYPES(0, 0, 0, TEEC_VALUE_INPUT);
+	command = TEE_SKS_CMD_IDENTIFIER;
+#endif /* CFG_SKS_CMD_AS_PARAM */
 
 	/*
 	 * Invoke the TEE and update output buffer size on exit.
