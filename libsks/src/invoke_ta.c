@@ -9,8 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <linux/tee.h>
-
 #include "ck_helpers.h"
 #include "invoke_ta.h"
 #include "local_utils.h"
